@@ -518,15 +518,19 @@ ins_array = ins.split("\n")
 
 total_columns = i_array.last.split(" ").last.to_i
 
+# Get each stack
 def get_stack(column, i_array)
     b = []
     i_array.each do |a|
         old = a.split("")
         b << old[column]
     end
+    b.reject! { |c| c == " "}
+    b.pop
     b
 end
 
+#Generate each stack and save them inside the Hash for easy looping
 new_hash = {}
 count = 1
 (1..total_columns).each do |a|
@@ -534,20 +538,17 @@ count = 1
     count = count + 4
 end
 
-new_hash.each do |k, v|
-    v.reject! { |c| c == " "}
-    v.pop
-end
-
+#Iterate over instructions
 ins_array.each do |t|
     i = t.split(" ")
-    #i[1], i[3], i[5]
+    #movements - i[1], from - i[3], to -i[5]
     moving_array = new_hash[i[3]].first(i[1].to_i)
     new_hash[i[3]].shift(i[1].to_i)
     new_hash[i[5]].unshift(moving_array)
     new_hash[i[5]].flatten!
 end
 
+# create the final string result
 string = ""
 new_hash.each do |k, v|
     string = string + v[0]
